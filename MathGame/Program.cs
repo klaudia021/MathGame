@@ -1,45 +1,93 @@
-﻿const int exitNumber = 5;
+﻿const int playGameMenu = 1;
+const int viewScoresMenu = 2;
+const int additionMenu = 1;
+const int subtractionMenu = 2;
+const int multiplicationMenu = 3;
+const int divisionMenu = 4;
+const int exitMenu = 5;
+
 int selectedMenu;
+List<int> mainMenuNumbers = new List<int>{playGameMenu, viewScoresMenu, exitMenu};
+
 
 do
 {
     ListMenu();
 
-    selectedMenu = GetSelectedMenu();
+    selectedMenu = GetSelectedMenu(mainMenuNumbers);
 
     switch (selectedMenu)
     {
-        case 1:
+        case playGameMenu:
             PlayGame();
             break;
-        case 2:
+        case viewScoresMenu:
             ListScores();
             break;
-
-        case exitNumber:
+        case exitMenu:
             break;
         default:
             break;
     }
 
-} while (selectedMenu != exitNumber);
+} while (selectedMenu != exitMenu);
 
 void ListMenu()
 {
-    System.Console.WriteLine("1 - Play the game");
-    System.Console.WriteLine("2 - View score");
+    System.Console.WriteLine($"{playGameMenu} - Play the game");
+    System.Console.WriteLine($"{viewScoresMenu} - View score");
     System.Console.WriteLine();
-    System.Console.WriteLine($"{exitNumber} - Exit");
+    System.Console.WriteLine($"{exitMenu} - Exit");
     System.Console.WriteLine();
     System.Console.Write("Please select a menu number: ");
 }
 
-int GetSelectedMenu()
+void PlayGame()
 {
-    var input = Console.ReadLine();
-    int number;
-    List<int> validMenuNumbers = new List<int>{1, 2, 5};
+    ListOperations();
 
+    List<int> operationMenuNumbers = new List<int> {additionMenu, subtractionMenu, multiplicationMenu, divisionMenu, exitMenu};
+    int operationNumber = GetSelectedMenu(operationMenuNumbers);
+
+    switch (operationNumber)
+    {
+        case additionMenu:
+            break;
+        case subtractionMenu:
+            break;
+        case multiplicationMenu:
+            break;
+        case divisionMenu:
+            break;
+        case exitMenu:
+            break;
+        default:
+            break;
+    }
+}
+
+void ListOperations()
+{
+    System.Console.WriteLine($"{additionMenu} - Addition");
+    System.Console.WriteLine($"{subtractionMenu} - Subtraction");
+    System.Console.WriteLine($"{multiplicationMenu} - Multiplication");
+    System.Console.WriteLine($"{divisionMenu} - Division");
+    System.Console.WriteLine();
+    System.Console.WriteLine($"{exitMenu} - Exit");
+    System.Console.WriteLine();
+    System.Console.Write("Please select a menu number: ");
+}
+
+void ListScores()
+{
+    
+}
+
+int GetSelectedMenu(List<int> validMenuNumbers)
+{
+    string? input = Console.ReadLine();
+    int number;
+    
     while (String.IsNullOrEmpty(input) || !Int32.TryParse(input, out number) || !validMenuNumbers.Contains(number))
     {
         System.Console.Write("Please select a menu number: ");
@@ -47,14 +95,4 @@ int GetSelectedMenu()
     }
 
     return number;
-}
-
-void PlayGame()
-{
-    
-}
-
-void ListScores()
-{
-    
 }
