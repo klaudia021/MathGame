@@ -4,15 +4,16 @@ const int additionMenu = 1;
 const int subtractionMenu = 2;
 const int multiplicationMenu = 3;
 const int divisionMenu = 4;
-const int exitMenu = 5;
+const int exitMenu = 9;
 
 int selectedMenu;
 List<int> mainMenuNumbers = new List<int>{playGameMenu, viewScoresMenu, exitMenu};
+List<string> mainMenuText = new List<string> {$"{playGameMenu} - Play the game", $"{viewScoresMenu} - View score"};
 
 
 do
 {
-    ListMenu();
+    ListMenu(mainMenuText);
 
     selectedMenu = GetSelectedMenu(mainMenuNumbers);
 
@@ -32,10 +33,13 @@ do
 
 } while (selectedMenu != exitMenu);
 
-void ListMenu()
+void ListMenu(List<string> menuText)
 {
-    System.Console.WriteLine($"{playGameMenu} - Play the game");
-    System.Console.WriteLine($"{viewScoresMenu} - View score");
+    foreach (var menuElement in menuText)
+    {
+        System.Console.WriteLine(menuElement);
+    }
+
     System.Console.WriteLine();
     System.Console.WriteLine($"{exitMenu} - Exit");
     System.Console.WriteLine();
@@ -44,9 +48,17 @@ void ListMenu()
 
 void PlayGame()
 {
-    ListOperations();
-
+    List <string> operationMenuText = new List<string>
+    {
+        $"{additionMenu} - Addition",
+        $"{subtractionMenu} - Subtraction",
+        $"{multiplicationMenu} - Multiplication",
+        $"{divisionMenu} - Division"
+    };
     List<int> operationMenuNumbers = new List<int> {additionMenu, subtractionMenu, multiplicationMenu, divisionMenu, exitMenu};
+    
+    ListMenu(operationMenuText);
+
     int operationNumber = GetSelectedMenu(operationMenuNumbers);
 
     switch (operationNumber)
@@ -64,18 +76,6 @@ void PlayGame()
         default:
             break;
     }
-}
-
-void ListOperations()
-{
-    System.Console.WriteLine($"{additionMenu} - Addition");
-    System.Console.WriteLine($"{subtractionMenu} - Subtraction");
-    System.Console.WriteLine($"{multiplicationMenu} - Multiplication");
-    System.Console.WriteLine($"{divisionMenu} - Division");
-    System.Console.WriteLine();
-    System.Console.WriteLine($"{exitMenu} - Exit");
-    System.Console.WriteLine();
-    System.Console.Write("Please select a menu number: ");
 }
 
 void ListScores()
