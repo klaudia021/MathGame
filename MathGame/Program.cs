@@ -6,11 +6,12 @@ const int multiplicationMenu = 3;
 const int divisionMenu = 4;
 const int randomGameMenu = 5;
 const int exitMenu = 9;
+const int numberOfQuestions = 5;
 
 int selectedMenu;
 List<int> mainMenuNumbers = new List<int>{playGameMenu, viewScoresMenu, exitMenu};
 List<string> mainMenuText = new List<string> {$"{playGameMenu} - Play the game", $"{viewScoresMenu} - View score"};
-
+List<int> scoreHistory = new List<int>();
 
 do
 {
@@ -49,7 +50,7 @@ void ListMenu(List<string> menuText)
 
 void PlayGame()
 {
-    const int numberOfQuestions = 5;
+    int currentScore = 0;
     List <string> operationMenuText = new List<string>
     {
         $"{additionMenu} - Addition",
@@ -73,17 +74,20 @@ void PlayGame()
         for (int i = 0; i < numberOfQuestions; i++)
         {
             operationNumber = random.Next(1, 5);    
-            OperationQuestion(operationNumber);
+            OperationQuestion(operationNumber, ref currentScore);
         }
-
-        return;
+    }
+    else
+    {
+        for (int i = 0; i < numberOfQuestions; i++)
+            OperationQuestion(operationNumber, ref currentScore);
     }
 
-    for (int i = 0; i < numberOfQuestions; i++)
-        OperationQuestion(operationNumber);
+    scoreHistory.Add(currentScore);
+    ListScores(scoreHistory.Count - 1);
 }
 
-void OperationQuestion(int operationNumber)
+void OperationQuestion(int operationNumber, ref int currentScore)
 {
     Random random = new Random();
     const int easyAdditionSubtractionDivisionMax = 101;
@@ -102,7 +106,7 @@ void OperationQuestion(int operationNumber)
             System.Console.Write($"{numberFirst} + {numberSecond}?: ");
             correctAnswer = numberFirst + numberSecond;
 
-            CheckAnswer(correctAnswer);            
+            CheckAnswer(correctAnswer, ref currentScore);            
             break;
         case subtractionMenu:
             numberFirst = random.Next(0, easyAdditionSubtractionDivisionMax);
@@ -111,7 +115,7 @@ void OperationQuestion(int operationNumber)
             System.Console.Write($"{numberFirst} - {numberSecond}?: ");
             correctAnswer = numberFirst - numberSecond;
 
-            CheckAnswer(correctAnswer);  
+            CheckAnswer(correctAnswer, ref currentScore);  
             break;
         case multiplicationMenu:
             numberFirst = random.Next(0, easyMultiplicationMaxNumber1);
@@ -120,7 +124,7 @@ void OperationQuestion(int operationNumber)
             System.Console.Write($"{numberFirst} * {numberSecond}?: ");
             correctAnswer = numberFirst * numberSecond;
 
-            CheckAnswer(correctAnswer);  
+            CheckAnswer(correctAnswer, ref currentScore);  
             break;
         case divisionMenu:
             numberFirst = random.Next(0, easyAdditionSubtractionDivisionMax);
@@ -134,7 +138,7 @@ void OperationQuestion(int operationNumber)
             System.Console.Write($"{numberFirst} / {numberSecond}?: ");
             correctAnswer = numberFirst / numberSecond;
 
-            CheckAnswer(correctAnswer);
+            CheckAnswer(correctAnswer, ref currentScore);
             break;
         case exitMenu:
             break;
@@ -143,19 +147,26 @@ void OperationQuestion(int operationNumber)
     }
 }
 
-void CheckAnswer(int correctAnswer)
+void CheckAnswer(int correctAnswer, ref int currentScore)
 {
     string? input = Console.ReadLine();
 
     if (!string.IsNullOrWhiteSpace(input) && Int32.TryParse(input, out int number) && number == correctAnswer)
+    {
         System.Console.WriteLine($"Correct! The answer is {correctAnswer}.\n");
+        currentScore += 1;
+    }
     else
         System.Console.WriteLine($"Incorrect! The answer is {correctAnswer}.\n");
 }
 
-void ListScores()
+void ListScores(int startScoreIndex = 0)
 {
-    
+    for (int i = startScoreIndex; i < scoreHistory.Count; i++)
+    {
+        System.Console.WriteLine($"Score of game #{i+1}: {scoreHistory[i]}/{numberOfQuestions}");
+    }
+    System.Console.WriteLine();
 }
 
 int GetSelectedMenu(List<int> validMenuNumbers)
