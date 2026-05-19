@@ -1,4 +1,6 @@
-﻿const int playGameMenu = 1;
+﻿using System.Diagnostics;
+
+const int playGameMenu = 1;
 const int viewScoresMenu = 2;
 const int additionMenu = 1;
 const int subtractionMenu = 2;
@@ -11,7 +13,7 @@ const int numberOfQuestions = 5;
 int selectedMenu;
 List<int> mainMenuNumbers = new List<int>{playGameMenu, viewScoresMenu, exitMenu};
 List<string> mainMenuText = new List<string> {$"{playGameMenu} - Play the game", $"{viewScoresMenu} - View score"};
-List<int> scoreHistory = new List<int>();
+List<ScoreHistory> scoreHistory = new List<ScoreHistory>();
 
 do
 {
@@ -51,6 +53,8 @@ void ListMenu(List<string> menuText)
 void PlayGame()
 {
     int currentScore = 0;
+    Stopwatch stopWatch = new Stopwatch();
+
     List <string> operationMenuText = new List<string>
     {
         $"{additionMenu} - Addition",
@@ -68,12 +72,14 @@ void PlayGame()
 
     int operationNumber = GetSelectedMenu(operationMenuNumbers);
 
+    stopWatch.Start();
+
     if (operationNumber == randomGameMenu)
     {
         Random random = new Random();
         for (int i = 0; i < numberOfQuestions; i++)
         {
-            operationNumber = random.Next(1, 5);    
+            operationNumber = random.Next(1, 5);
             OperationQuestion(operationNumber, ref currentScore);
         }
     }
@@ -83,7 +89,9 @@ void PlayGame()
             OperationQuestion(operationNumber, ref currentScore);
     }
 
-    scoreHistory.Add(currentScore);
+    stopWatch.Stop();
+
+    scoreHistory.Add(new ScoreHistory { Score = currentScore, Time =  stopWatch.Elapsed});
     ListScores(scoreHistory.Count - 1);
 }
 
@@ -164,7 +172,7 @@ void ListScores(int startScoreIndex = 0)
 {
     for (int i = startScoreIndex; i < scoreHistory.Count; i++)
     {
-        System.Console.WriteLine($"Score of game #{i+1}: {scoreHistory[i]}/{numberOfQuestions}");
+        System.Console.WriteLine($"Score of game #{i+1}: {scoreHistory[i].Score}/{numberOfQuestions} Time: {scoreHistory[i].FormatTime()}");
     }
     System.Console.WriteLine();
 }
